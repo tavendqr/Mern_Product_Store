@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useProductStore = create((set) => ({
 	products: [],
 	setProducts: (products) => set({ products }),
@@ -7,7 +9,7 @@ export const useProductStore = create((set) => ({
 		if (!newProduct.name || !newProduct.price) {
 			return { success: false, message: "Please fill in all fields." };
 		}
-		const res = await fetch("/api/product", {
+		const res = await fetch(`${API_URL}/api/product`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -19,12 +21,12 @@ export const useProductStore = create((set) => ({
 		return { success: true, message: "Product created successfully" };
 	},
 	fetchProducts: async () => {
-		const res = await fetch("/api/product");
+		const res = await fetch(`${API_URL}/api/product`);
 		const data = await res.json();
 		set({ products: data.data });
 	},
 	deleteProduct: async (pid) => {
-		const res = await fetch(`/api/product/${pid}`, {
+		const res = await fetch(`${API_URL}/api/product/${pid}`, {
 			method: "DELETE",
 		});
 		const data = await res.json();
@@ -35,7 +37,7 @@ export const useProductStore = create((set) => ({
 		return { success: true, message: data.message };
 	},
 	updateProduct: async (pid, updatedProduct) => {
-		const res = await fetch(`/api/product/${pid}`, {
+		const res = await fetch(`${API_URL}/api/product/${pid}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
